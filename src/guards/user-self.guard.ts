@@ -1,6 +1,8 @@
 import {
   CanActivate,
   ExecutionContext,
+  HttpException,
+  HttpStatus,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -15,7 +17,7 @@ export class UserSelfGuard implements CanActivate {
       const req = context.switchToHttp().getRequest();
       
       console.log(req.user.id)
-      
+
       if (String(req.user.id) != req.params.id) {
           throw new UnauthorizedException({
               message: 'Ruxsat etilmagan',
@@ -24,9 +26,10 @@ export class UserSelfGuard implements CanActivate {
 
       return true;
     } catch (error) {
-      throw new UnauthorizedException({
-        message: 'Ruxsat etilmagan foydalanuvchi',
-      });
+      throw new HttpException(
+          'Ruxsat etilmagan foydalanuvchi',
+          HttpStatus.FORBIDDEN
+        );
     }
   }
 }

@@ -9,7 +9,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Roles } from 'src/decorators/role-auth.decorator';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/guards/roles.guard';
 import { UserSelfGuard } from 'src/guards/user-self.guard';
 // import { ValidationPipe } from 'src/pipe/validation.pipe';
 import { ActivateUserDto } from './dto/activate-user.dto';
@@ -58,7 +60,7 @@ export class UsersController {
 
   @UseGuards(UserSelfGuard)
   @UseGuards(JwtAuthGuard)
-  
+
   @Get(':id')
   getOneUser(@Param('id') id: number) {
     return this.userService.getOneUser(id)
@@ -70,6 +72,10 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Foydalanuvchilarga role berish' })
   @ApiResponse({ status: 200, type: User })
+
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
+
   @Post('role')
   addRole(@Body() addRoleDto: AddRoleDto) {
     return this.userService.addRole(addRoleDto);
@@ -90,7 +96,7 @@ export class UsersController {
   // Userni yangilash route
   //==================================================================================
 
-  @ApiOperation({ summary: 'Foydalanuvchini yangilash' })
+  @ApiOperation({ summary: 'Fotydalanuvchini yangilash' })
   @ApiResponse({ status: 200, type: User })
   @Put(':id')
   editUser(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {

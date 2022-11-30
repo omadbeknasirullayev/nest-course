@@ -1,6 +1,8 @@
 import {
   CanActivate,
   ExecutionContext,
+  HttpException,
+  HttpStatus,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -30,9 +32,10 @@ export class JwtAuthGuard implements CanActivate {
       req.user = user;
       return true;
     } catch (error) {
-      throw new UnauthorizedException({
-        message: "Foydalanuvchi avtorizatsiyadan o'tmagan",
-      });
+      throw new HttpException(
+        'Ruxsat etilmagan foydalanuvchi',
+        HttpStatus.FORBIDDEN
+      );
     }
   }
 }

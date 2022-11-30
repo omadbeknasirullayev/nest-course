@@ -104,6 +104,8 @@ export class UsersService {
   }
 
 //==================================================================================
+// Userni o'chirish
+//==================================================================================
 
   async deleteUser(id: number) {
     const deleted = await this.userRepository.destroy({where: {id}})
